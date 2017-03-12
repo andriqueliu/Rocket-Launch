@@ -13,19 +13,19 @@ import Adafruit_BBIO.GPIO as GPIO
 import Adafruit_BBIO.ADC as ADC
 import time
 
-# Print welcome message
+# Print welcome and safety message
 def print_welcome():
 	print("Welcome to the Launch Program.")
 	print("Please make sure you have read the manual before operating this program.")
 	print("If you haven\'t, please check it out and come back when you\'ve read it.")
-	print("SAFETY FIRST!!!")
+	print("Remember, SAFETY FIRST!!!")
 
-# Initialize GPIOs
+# Initialize GPIO pins
 def init_GPIO():
 	GPIO.setup("P8_8", GPIO.OUT)
 	GPIO.setup("P8_10", GPIO.OUT)
 
-# Initialize ADCs
+# Initialize ADC pins
 def init_ADC():
 	ADC.setup()
 
@@ -73,8 +73,13 @@ def read_ADC():
 	else:
 		print('Power is NOT ACTIVE')
 		return 0
-		
-# 
+
+# launch_sequence begins the launch sequence.
+# This function prompts the user whether they would like to enable FET A,
+# then B, and if the user wishes to enable both, the user will be prompted
+# with an additional redundant prompt.
+# If launch is approved, FETs will be enabled briefly.
+# Else, function exits
 def launch_sequence():
 	print "Initiating launch sequence."
 	response_A = raw_input("Arm FET A? (Yes or No) ")
@@ -85,8 +90,9 @@ def launch_sequence():
 		if (response_final == "Yes"):
 			print "Launching!"
 			
-			all_high() ###
-			time.sleep(3)
+			enable_FET_A()
+			enable_FET_B()
+			time.sleep(2) # This will need to be calibrated depending on board tolerance!!!
 		else:
 			print "Abort"
 	else:
@@ -97,30 +103,27 @@ def shutdown():
 	all_low()
 	GPIO.cleanup()
 
-'''
-response = raw_input("Enter your response: ")
-if response in ['hey']:
-	all_low()
-'''
-
-# Program execution
+# Program Execution
 try:
 	print_welcome()
 	init_GPIO()
 	init_ADC()
-	all_low() ###
+	disable_all_FETs()
+	
 	while True:
 		# Keep checking for power value until the power is ACTIVE.
 		while not read_ADC():
 			time.sleep(1)
 		
+		# Initiate launch sequence
 		launch_sequence()
 		
 		break
+		
 except KeyboardInterrupt:
 	shutdown()
 	print "User KeyboardInterrupt"
+	
 else:
 	shutdown()
 	print "Some other exception..."
-#shutdown()
