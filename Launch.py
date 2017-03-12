@@ -5,7 +5,13 @@ ESS 472 Wireless Rocket Launch Research Project
 Research Advisor: Professor John Sahr
 Authors: Andrique Liu and Emraj Sidhu
 
-Launch.py 
+Launch.py enables the user to safely launch rockets using a series of redundant checks.
+
+Note that this program 
+
+Note that in the field, this code is designed to be operated from a safe distance. In
+our case, this is accomplished by using EnGenius radio modules, allowing the user to
+remotely SSH into the BeagleBone Black and operate this program.
 '''
 
 # Import libraries
@@ -108,7 +114,7 @@ try:
 	print_welcome()
 	init_GPIO()
 	init_ADC()
-	disable_all_FETs()
+	disable_all_FETs() # CRITICAL
 	
 	while True:
 		# Keep checking for power value until the power is ACTIVE.
