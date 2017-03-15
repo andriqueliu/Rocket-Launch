@@ -80,6 +80,20 @@ def read_ADC():
 		print('Power is NOT ACTIVE')
 		return 0
 
+# countdown controls a 5 second countdown to launch.
+def countdown():
+	print "5..."
+	time.sleep(1)
+	print "4..."
+	time.sleep(1)
+	print "3..."
+	time.sleep(1)
+	print "2..."
+	time.sleep(1)
+	print "1..."
+	time.sleep(1)
+	print "Launching!"
+
 # launch_sequence begins the launch sequence.
 # This function prompts the user whether they would like to enable FET A,
 # then B, and if the user wishes to enable both, the user will be prompted
@@ -94,7 +108,8 @@ def launch_sequence():
 	if (response_A == "Yes") and (response_B == "Yes"):
 		response_final = raw_input("Final confirmation: Launch? ")
 		if (response_final == "Yes"):
-			print "Launching!"
+			# print "Launching!"
+			countdown()
 			
 			enable_FET_A()
 			enable_FET_B()
